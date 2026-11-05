@@ -36,7 +36,9 @@ def verdict(report, pair):
     pools = {m.get("pubkey") for m in mk} | {m.get(k) for m in mk for k in ("liquidityA", "liquidityB")} | set(r.get("knownAccounts") or {})
     pools.discard(None)   # a missing key must not make every holder look like a pool
     top10 = sum(sorted((h.get("pct") or 0 for h in r.get("topHolders") or [] if h.get("owner") not in pools and h.get("address") not in pools), reverse=True)[:10])
-    if top10 > 40: red.append(f"top 10 wallets hold {top10:.0f}% (they can dump on you)")
+    big = (r.get("totalHolders") or 0) >= 50_000   # on big established coins the top wallets are mostly exchanges
+    if top10 > 40 and not big: red.append(f"top 10 wallets hold {top10:.0f}% (they can dump on you)")
+    elif top10 > 40: yellow.append(f"top 10 wallets hold {top10:.0f}% (likely exchanges on a coin this big)")
     elif top10 > 25: yellow.append(f"top 10 wallets hold {top10:.0f}%")
     supply = (r.get("token") or {}).get("supply") or 0
     if supply and (r.get("creatorBalance") or 0) / supply > 0.03: yellow.append(f"creator still holds {(r.get('creatorBalance') or 0) / supply:.0%}")
@@ -97,7 +99,7 @@ def telegram():
             else:
                 mint = find_mint(text)
                 if not mint: continue
-                reply = check(mint)
+                reply = check(mint); print(f"checked {mint}: {reply.splitlines()[0]}")
             data = urllib.parse.urlencode({"chat_id": chat, "text": reply, "disable_web_page_preview": "true"}).encode()
             try: urllib.request.urlopen(urllib.request.Request(api + "sendMessage", data=data, headers=UA), timeout=20)
             except Exception as e: print("send failed:", e)

@@ -21,6 +21,7 @@ class Verdicts(unittest.TestCase):
         whales = {**SAFE_REPORT, "topHolders": [{"owner": f"w{i}", "pct": 5} for i in range(10)]}
         self.assertEqual(verdict(whales, SAFE_PAIR)[0], "🔴")                      # 50% in 10 wallets
         self.assertEqual(verdict({**SAFE_REPORT, "totalHolders": 50}, SAFE_PAIR)[0], "🟡")
+        self.assertEqual(verdict({**whales, "totalHolders": 2_000_000}, SAFE_PAIR)[0], "🟡")   # big old coin: those are usually exchanges
 
     def test_tiny_liquidity_and_no_pair(self):
         self.assertEqual(verdict(SAFE_REPORT, {**SAFE_PAIR, "liquidity": {"usd": 500}})[0], "🔴")
