@@ -2,6 +2,10 @@
 
 Paste a Solana token and get a **🟢 / 🟡 / 🔴 safety verdict** in plain English before you buy.
 
+## 🤖 Try it now on Telegram: [@Big_oz_Rug_check_bot](https://t.me/Big_oz_Rug_check_bot)
+
+Open the bot, tap **Start**, and paste any Solana token address or pump.fun / DexScreener link. Free, no sign-up.
+
 It catches the tricks scammers use to rug people:
 
 | Check | Why it matters |
@@ -33,7 +37,7 @@ HIGH RISK: don't touch it
 💧 liquidity $0 · mcap $16,191 · holders 308
 ```
 
-### As a Telegram bot
+### Run your own Telegram bot
 
 1. Message [@BotFather](https://t.me/BotFather), send `/newbot`, and copy the token it gives you.
 2. Start the bot:
