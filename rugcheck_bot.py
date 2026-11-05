@@ -99,7 +99,9 @@ def telegram():
             else:
                 mint = find_mint(text)
                 if not mint: continue
-                reply = check(mint); print(f"checked {mint}: {reply.splitlines()[0]}")
+                try: reply = check(mint); print(f"checked {mint}: {reply.splitlines()[0]}")
+                except Exception as e:   # odd API data must never crash the bot (it would re-read the same message forever)
+                    print(f"check {mint} failed: {e!r}"); reply = "Something went wrong checking that token. Try again in a minute."
             data = urllib.parse.urlencode({"chat_id": chat, "text": reply, "disable_web_page_preview": "true"}).encode()
             try: urllib.request.urlopen(urllib.request.Request(api + "sendMessage", data=data, headers=UA), timeout=20)
             except Exception as e: print("send failed:", e)
